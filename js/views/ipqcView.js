@@ -20,7 +20,7 @@ class IPQCView {
         this.tableBody.innerHTML = '';
         
         if (data.length === 0) {
-            this.tableBody.innerHTML = `<tr><td colspan="8" class="text-center text-muted py-4">查無相關檢驗紀錄</td></tr>`;
+            this.tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">查無相關檢驗紀錄</td></tr>`;
             this.pageInfo.innerText = `顯示 0 至 0 筆，共 0 筆`;
             this.pagination.innerHTML = '';
             return;
@@ -31,16 +31,26 @@ class IPQCView {
         const pageData = data.slice(startIndex, endIndex);
 
         pageData.forEach(item => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${item.id}</td>
-                <td>${item.date || ''}</td>
-                <td>${item.time || ''}</td>
-                <td><strong>${item.order_number || ''}</strong></td>
-                <td>${item.operator || ''}</td>
-                <td>${item.product_name || ''}</td>
+            // 🌟 建立容器元素 (使用 table-row-group 以利相容 Bootstrap 隱顯)
+            const rowGroup = document.createElement('div');
+            rowGroup.className = 'd-contents'; 
+
+            // A. PC/平版寬螢幕模式 (桌面顯示為標準 Table 行)
+            const trDesktop = document.createElement('tr');
+            trDesktop.className = 'd-none d-md-table-row';
+            trDesktop.innerHTML = `
                 <td>
-                    <small class="text-danger d-block">${item.defect_classification || ''}</small>
+                    <span class="text-dark">${item.date || ''}</span><br>
+                    <small class="text-muted">${item.time || ''}</small>
+                </td>
+                <td><strong>${item.order_number || ''}</strong></td>
+                <td>
+                    <div class="fw-bold text-secondary" style="font-size: 0.9rem;">${item.product_number || ''}</div>
+                    <div class="text-dark my-1">${item.product_name || ''}</div>
+                    <div class="text-muted small" style="font-size: 0.85rem;">${item.spec || ''}</div>
+                </td>
+                <td>
+                    <small class="text-danger d-block fw-bold">${item.defect_classification || ''}</small>
                     <span class="badge ${item.defect_status ? 'bg-warning text-dark' : 'bg-success'}">
                         ${item.defect_status || '正常'}
                     </span>
@@ -54,30 +64,54 @@ class IPQCView {
                     </button>
                 </td>
             `;
-            this.tableBody.appendChild(tr);
+
+            // B. 手機行動裝置模式 (自動轉化為垂直精緻 Card，包在一個特製 Tr 內填滿寬度)
+            const trMobile = document.createElement('tr');
+            trMobile.className = 'd-md-none';
+            trMobile.innerHTML = `
+                <td colspan="5" class="p-2 border-0">
+                    <div class="card shadow-sm border-start border-3 border-primary mb-2">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                <span class="badge bg-light text-dark border"><i class="fa-regular fa-calendar me-1"></i>${item.date || ''} ${item.time || ''}</span>
+                                <span class="badge ${item.defect_status ? 'bg-warning text-dark' : 'bg-success'}">${item.defect_status || '正常'}</span>
+                            </div>
+                            <div class="mb-1"><small class="text-muted">工單號碼：</small><strong>${item.order_number || ''}</strong></div>
+                            <div class="mb-1"><small class="text-muted">產品料號：</small><span class="text-secondary">${item.product_number || ''}</span></div>
+                            <div class="mb-2"><small class="text-muted">品名規格：</small><span class="text-dark fw-bold">${item.product_name || ''}</span> <small class="text-muted">(${item.spec || ''})</small></div>
+                            ${item.defect_classification ? `<div class="mb-2"><small class="text-muted text-danger">不良分類：</small><span class="text-danger fw-bold">${item.defect_classification}</span></div>` : ''}
+                            <div class="d-flex justify-content-end border-top pt-2 mt-2">
+                                <button class="btn btn-sm btn-primary me-2 px-3" onclick="controller.openEditModal(${item.id})"><i class="fa-solid fa-pen me-1"></i>編輯</button>
+                                <button class="btn btn-sm btn-danger px-3" onclick="controller.handleDelete(${item.id})"><i class="fa-solid fa-trash me-1"></i>刪除</button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            `;
+
+            rowGroup.appendChild(trDesktop);
+            rowGroup.appendChild(trMobile);
+            this.tableBody.appendChild(rowGroup);
         });
 
         this.pageInfo.innerText = `顯示 ${startIndex + 1} 至 ${endIndex} 筆，共 ${data.length} 筆`;
         this.renderPagination('pagination', data.length, page, limit, 'controller.changePage');
     }
 
-    // 緊湊型無縫邊框分頁渲染器
     renderPagination(elementId, totalItems, currentPage, limit, onClickFuncName) {
         const el = document.getElementById(elementId);
         el.innerHTML = '';
         const totalPages = Math.ceil(totalItems / limit);
         if (totalPages <= 1) return;
 
-        let html = `<div class="compact-pagination">`;
+        let html = `<div class="compact-pagination my-2">`;
 
-        // 上一頁
         if (currentPage === 1) {
             html += `<span class="page-btn disabled">上一頁</span>`;
         } else {
             html += `<a class="page-btn" href="#" onclick="event.preventDefault(); ${onClickFuncName}(${currentPage - 1})">上一頁</a>`;
         }
 
-        // 動態計算顯示頁碼範圍 (最多顯示當前頁面鄰近的頁碼)
         let startPage = Math.max(1, currentPage - 1);
         let endPage = Math.min(totalPages, startPage + 2);
         if (endPage - startPage < 2) {
@@ -92,7 +126,6 @@ class IPQCView {
             }
         }
 
-        // 下一頁
         if (currentPage === totalPages) {
             html += `<span class="page-btn disabled">下一頁</span>`;
         } else {
@@ -213,7 +246,7 @@ class IPQCView {
         tableConfig.columns.forEach(col => {
             const value = editData[col.field] ?? '';
             this.subFormFields.innerHTML += `
-                <div class="col-md-12 mb-3">
+                <div class="col-12 mb-3">
                     <label class="form-label small">${col.label}</label>
                     <input type="text" id="sub_${col.field}" class="form-control" value="${value}" required>
                 </div>

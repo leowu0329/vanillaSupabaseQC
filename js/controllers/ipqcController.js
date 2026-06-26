@@ -15,7 +15,6 @@ class IPQCController {
         this.subCurrentPage = 1; 
         this.subLimit = 5;
 
-        // 🌟 核心對齊校正：將 operator_list 的欄位從 dept 改為資料庫真實的 department
         this.tableConfigs = {
             defect: { title: '不良分類主檔 (defect_list)', table: 'defect_list', columns: [{ field: 'defect_type', label: '不良分類' }, { field: 'description', label: '敘述說明' }] },
             order: { title: '工單主檔 (order_list)', table: 'order_list', columns: [{ field: 'order_number', label: '工單號碼' }, { field: 'product_number', label: '產品料號' }, { field: 'product_name', label: '產品名稱' }, { field: 'quantity', label: '數量' }] },
@@ -81,7 +80,6 @@ class IPQCController {
         const data = this.view.getFormData();
         const id = data.id;
 
-        // 剔除 id 屬性避免與資料庫自增鎖衝突
         delete data.id;
 
         try {
@@ -187,7 +185,6 @@ class IPQCController {
         const subData = this.view.getSubFormData(config.columns);
         const id = subData.id;
 
-        // 剔除 id
         delete subData.id;
 
         try {

@@ -5,7 +5,6 @@ class IPQCModel {
         this.client = createClient(window.ENV.SUPABASE_URL, window.ENV.SUPABASE_ANON_KEY);
     }
 
-    // 通用獲取全部資料
     async fetchAll(table, orderField = 'id') {
         const { data, error } = await this.client
             .from(table)
@@ -15,7 +14,6 @@ class IPQCModel {
         return data;
     }
 
-    // 通用新增紀錄
     async create(table, record) {
         delete record.id; 
         const { data, error } = await this.client
@@ -25,7 +23,6 @@ class IPQCModel {
         return data;
     }
 
-    // 通用更新紀錄
     async update(table, id, record) {
         const { data, error } = await this.client
             .from(table)
@@ -35,7 +32,6 @@ class IPQCModel {
         return data;
     }
 
-    // 通用刪除紀錄
     async delete(table, id) {
         const { data, error } = await this.client
             .from(table)
