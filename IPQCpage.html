@@ -327,11 +327,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config/env.config.template.js"></script>
     <script src="js/models/ipqcModel.js"></script>
     <script src="js/views/ipqcView.js"></script>
     <script src="js/controllers/ipqcController.js"></script>
     <script src="js/app.js"></script>
-    <script src="config/env.config.template.js"></script>
     <script>
         // 🌟 防禦機制：若 Vercel 上沒有 env.config.js，則自動嘗試讀取 Vercel 設定的系統環境變數
         if (!window.ENV) {
