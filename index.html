@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工廠管理系統 - 主頁</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', 'Noto Sans TC', sans-serif; background-color: #f8f9fa; }
+        .sidebar { min-width: 250px; max-width: 250px; min-height: 100vh; background: #212529; }
+        .sidebar .nav-link { color: rgba(255, 255, 255, 0.75); }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { color: #fff; background: #343a40; }
+    </style>
+</head>
+<body class="d-flex">
+
+    <div class="sidebar d-flex flex-column p-3 text-white">
+        <a href="index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <i class="fa-solid fa-industry me-2 fs-4"></i>
+            <span class="fs-4">管理系統</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="index.html" class="nav-link active"><i class="fa-solid fa-house me-2"></i>首頁</a>
+            </li>
+            <li>
+                <a href="IPQCpage.html" class="nav-link text-white"><i class="fa-solid fa-square-check me-2"></i>IPQC 管理</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="flex-grow-1 p-4">
+        <div class="card shadow-sm p-4">
+            <h2>歡迎使用工廠管理系統</h2>
+            <p class="text-muted mt-3">當前模組狀態：系統運行正常</p>
+            <hr>
+            <p>請點選側邊欄的 <strong>IPQC 管理</strong> 開始進行製程檢驗紀錄的維護與查詢。</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
